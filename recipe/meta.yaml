@@ -12,7 +12,7 @@ source:
     - xtb-openmp-gcc7.patch
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win]
 
 requirements:

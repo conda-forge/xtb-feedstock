@@ -20,7 +20,8 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('fortran') }}
-    - meson >=0.51
+    - meson >=0.51  # [not osx]
+    - meson >=0.51|<=0.53.2  # [osx]
     - ninja
   host:
     - libblas
@@ -41,8 +42,11 @@ requirements:
 test:
   imports:
     - xtb
+  requires:
+    - pytest
   commands:
     - xtb --version
+    - pytest --pyargs xtb
 
 about:
   home: https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/{{ name }}

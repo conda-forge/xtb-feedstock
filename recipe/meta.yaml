@@ -35,6 +35,7 @@ requirements:
     - liblapack
     - python >=3.6
     - {{ pin_compatible('numpy') }}
+    - ase
 
 
 test:

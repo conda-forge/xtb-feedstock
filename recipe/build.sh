@@ -24,4 +24,6 @@ else
 fi
 
 ninja test install
+
+popd
 "${PYTHON}" -m pip install python/ --no-deps -vvv

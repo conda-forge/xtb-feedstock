@@ -8,6 +8,9 @@ package:
 source:
   url: https://github.com/grimme-lab/{{ name }}/archive/d8e0332fdf4300c584ae37434e812cd63c77ba6d.tar.gz
   sha256: 2e8096d2558cb6184daeb0270fc01648a45b01dcbcfafb5f576dcbf9cc984a14
+  patches:
+    - xtb-openmp-gcc7.patch
+    - xtb-inquire-gcc7.patch
 
 build:
   number: 0

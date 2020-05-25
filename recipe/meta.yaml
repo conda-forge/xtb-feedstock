@@ -6,8 +6,8 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/grimme-lab/{{ name }}/archive/38d61b93537b6c817cfb15ebbf6c37c1d35943be.tar.gz
-  sha256: c5f6a63cbea0ea03e17a304b509ba6799d7d6260b06784315b05dc8c4f493bf5
+  url: https://github.com/grimme-lab/{{ name }}/archive/af8f525be2d088ec69323ce84952e2032161b53e.tar.gz
+  sha256: 2a48f8c04299cc0643b1f3c6b4dc295caf028331b44e59fc5c3352e0a0a37b6c
 
 build:
   number: 0
@@ -25,15 +25,9 @@ requirements:
     - liblapack
     - llvm-openmp  # [osx]
     - libgomp  # [linux and not aarch64]
-    - python
-    - pip
-    - numpy
   run:
     - libblas
     - liblapack
-    - python
-    - {{ pin_compatible('numpy') }}
-    - ase
 
 
 test:

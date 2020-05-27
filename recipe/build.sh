@@ -4,12 +4,11 @@ set -ex
 meson_options=(
    "--prefix=${PREFIX}"
    "--libdir=lib"
-   "--buildtype"
-   "release"
-   "--warnlevel"
-   "0"
+   "--buildtype=release"
+   "--warnlevel=0"
    "-Dbuild_name=conda-forge"
    "-Dla_backend=netlib"
+   "-Ddefault_library=shared"
    ".."
 )
 
@@ -24,6 +23,3 @@ else
 fi
 
 ninja test install
-
-popd
-"${PYTHON}" -m pip install python/ --no-deps -vvv

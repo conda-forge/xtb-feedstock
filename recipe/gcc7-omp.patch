@@ -1,16 +1,18 @@
 diff --git a/src/disp/dftd4.f90 b/src/disp/dftd4.f90
-index ec043ac..5b071b8 100644
+index ec043ac..9b20b47 100644
 --- a/src/disp/dftd4.f90
 +++ b/src/disp/dftd4.f90
-@@ -924,7 +924,7 @@ subroutine weight_references(dispm, nat, atoms, g_a, g_c, wf, q, cn, &
+@@ -924,8 +924,8 @@ subroutine weight_references(dispm, nat, atoms, g_a, g_c, wf, q, cn, &
     zerodcn = 0.0_wp
     zetadq  = 0.0_wp
  
 -   !$omp parallel do default(none) shared(zetavec, zetadcn, zetadq, zerodcn) &
+-   !$omp shared(nat, atoms, zeff, gam, dispm, cn, q) &
 +   !$omp parallel do default(shared) shared(zetavec, zetadcn, zetadq, zerodcn) &
-    !$omp shared(nat, atoms, zeff, gam, dispm, cn, q) &
++   !$omp shared(nat, atoms, dispm, cn, q) &
     !$omp private(iat, ati, zi, gi, norm, dnorm, iref, icount, twf, gw, expw, &
     !$omp& expd, gwk, dgwk)
+    do iat = 1, nat
 @@ -1932,10 +1932,10 @@ subroutine atm_gradient_latp &
  
     cutoff2 = cutoff**2

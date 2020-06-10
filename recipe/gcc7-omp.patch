@@ -1,3 +1,15 @@
+diff --git a/meson.build b/meson.build
+index 0a3d98b..1f193f2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -97,6 +97,7 @@ xtb_common = static_library(
+   '_@0@'.format(meson.project_name()),
+   sources: srcs,
+   include_directories: incdir,
++  dependencies: exe_deps,
+   install: false,
+   pic: true,
+ )
 diff --git a/src/disp/dftd4.f90 b/src/disp/dftd4.f90
 index ec043ac..f5203c9 100644
 --- a/src/disp/dftd4.f90
@@ -46,19 +58,32 @@ index ec043ac..f5203c9 100644
        ati = mol%at(iat)
        do jat = 1, iat
 diff --git a/src/xtb/hamiltonian.f90 b/src/xtb/hamiltonian.f90
-index 4f451a6..7f5902d 100644
+index 4f451a6..bc4c0c0 100644
 --- a/src/xtb/hamiltonian.f90
 +++ b/src/xtb/hamiltonian.f90
-@@ -295,7 +295,7 @@ subroutine build_SDQH0(nShell, hData, nat, at, nbf, nao, xyz, trans, selfEnergy,
+@@ -293,9 +293,10 @@ subroutine build_SDQH0(nShell, hData, nat, at, nbf, nao, xyz, trans, selfEnergy,
+ 
+    ! diagonal elements
     !$omp parallel do default(none) reduction(+:H0, sint, dpint, qpint) &
-    !$omp shared(nat, xyz, at, nShell, hData, saoshell, selfEnergy, caoshell) &
+-   !$omp shared(nat, xyz, at, nShell, hData, saoshell, selfEnergy, caoshell) &
++   !$omp shared(nat, xyz, at, nShell, hData, saoshell, selfEnergy, caoshell, &
++   !$omp& point, intcut, nprim, primcount, alp, cont) &
     !$omp private(iat, ra, izp, ish, ishtyp, iao, i, ii, icao, naoi, iptyp, &
 -   !$omp& jah, jshtyp, jcao, ss, dd, qq, k, tmp, jao, jj)
-+   !$omp& jsh, jshtyp, jcao, ss, dd, qq, k, tmp, jao, jj)
++   !$omp& jsh, jshtyp, jcao, ss, dd, qq, k, tmp, jao, jj, naoj, jptyp)
     do iat = 1, nat
        ra = xyz(:, iat)
        izp = at(iat)
-@@ -624,7 +624,7 @@ subroutine build_dSDQH0_noreset(nShell, hData, selfEnergy, dSEdcn, intcut, &
+@@ -538,7 +539,7 @@ subroutine build_dSDQH0(nShell, hData, selfEnergy, dSEdcn, intcut, nat, nao, nbf
+ 
+    ! diagonal contributions
+    !$omp parallel do default(none) reduction(+:dhdcn) &
+-   !$omp shared(nat, at, nshell, hData, saoshell) &
++   !$omp shared(nat, at, nshell, hData, saoshell, P, dSEdcn) &
+    !$omp private(iat, izp, ish, ishtyp, iao, i, Pij)
+    do iat = 1, nat
+       izp = at(iat)
+@@ -624,7 +625,7 @@ subroutine build_dSDQH0_noreset(nShell, hData, selfEnergy, dSEdcn, intcut, &
     point = 0.0_wp
     ! call timing(t1,t3)
     !$OMP PARALLEL DO default(none) &
@@ -67,3 +92,12 @@ index 4f451a6..7f5902d 100644
     !$omp& H0, S, ves, vs, vd, vq, &
     !$omp& intcut, nprim, primcount, caoshell, saoshell, alp, cont) &
     !$omp PRIVATE(iat,jat,ixyz,izp,ci,rij2,jzp,ish,ishtyp,ij, &
+@@ -731,7 +732,7 @@ subroutine build_dSDQH0_noreset(nShell, hData, selfEnergy, dSEdcn, intcut, &
+ 
+    ! diagonal contributions
+    !$omp parallel do default(none) reduction(+:dhdcn) &
+-   !$omp shared(nat, at, nshell, hData, saoshell) &
++   !$omp shared(nat, at, nshell, hData, saoshell, P, dSEdcn) &
+    !$omp private(iat, izp, ish, ishtyp, iao, i, Pij)
+    do iat = 1, nat
+       izp = at(iat)

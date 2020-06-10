@@ -1,5 +1,5 @@
 {% set name = "xtb" %}
-{% set version = "6.3.0" %}
+{% set version = "6.3.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,9 +7,10 @@ package:
 
 source:
   url: https://github.com/grimme-lab/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 5ef138ad777c5c7dc011b342427b8696a3e7ed13a4708d10ec82f4ad5e1ba621
+  sha256: fbf0d72f26ac0ce7c896dd931f73b85f362dd53245022fc4494b29958c45bc57
   patches:
      - test-args.patch
+     - gcc7-omp.patch
 
 build:
   number: 0

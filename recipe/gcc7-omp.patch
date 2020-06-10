@@ -1,5 +1,5 @@
 diff --git a/src/disp/dftd4.f90 b/src/disp/dftd4.f90
-index ec043ac..c0a0e6f 100644
+index ec043ac..5b071b8 100644
 --- a/src/disp/dftd4.f90
 +++ b/src/disp/dftd4.f90
 @@ -924,7 +924,7 @@ subroutine weight_references(dispm, nat, atoms, g_a, g_c, wf, q, cn, &
@@ -11,7 +11,7 @@ index ec043ac..c0a0e6f 100644
     !$omp shared(nat, atoms, zeff, gam, dispm, cn, q) &
     !$omp private(iat, ati, zi, gi, norm, dnorm, iref, icount, twf, gw, expw, &
     !$omp& expd, gwk, dgwk)
-@@ -1932,7 +1932,7 @@ subroutine atm_gradient_latp &
+@@ -1932,10 +1932,10 @@ subroutine atm_gradient_latp &
  
     cutoff2 = cutoff**2
  
@@ -19,4 +19,8 @@ index ec043ac..c0a0e6f 100644
 +   !$omp parallel do default(none) reduction(+:energies, gradient, sigma, dEdcn) &
     !$omp shared(mol, r4r2, par, trans, cutoff2) &
     !$omp private(iat, ati, jat, atj, kat, atk, c6ij, cij, c6ik, c6jk, cik, cjk, &
-    !$omp& itr, rij, r2ij, ktr, rik, r2ik, rjk, r2jk, scale, dE, dG, dS, dCN)
+-   !$omp& itr, rij, r2ij, ktr, rik, r2ik, rjk, r2jk, scale, dE, dG, dS, dCN)
++   !$omp& rij, r2ij, ktr, rik, r2ik, rjk, r2jk, scale, dE, dG, dS, dCN)
+    do iat = 1, len(mol)
+       ati = mol%at(iat)
+       do jat = 1, iat

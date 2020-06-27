@@ -8,8 +8,6 @@ package:
 source:
   url: https://github.com/grimme-lab/{{ name }}/archive/012c7ec60c2e38c89498868657f81ceafcbc6781.tar.gz
   sha256: 83e10e3657abd7163ab85fe24d7ff32accd46e3ce1cb5c60f6071a2491f2c001
-  patches:
-     - test-args.patch
 
 build:
   number: 0

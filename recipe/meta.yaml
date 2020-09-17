@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/grimme-lab/{{ name }}/archive/{{ version }}.tar.gz
+  url: https://github.com/grimme-lab/{{ name }}/archive/v{{ version }}.tar.gz
   sha256: d7f154bf53a635b94946ba9e7986b6bfbd704e040d38cc504ea5422fb4be21f8
 
 build:

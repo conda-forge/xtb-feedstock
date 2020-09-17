@@ -6,8 +6,8 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/grimme-lab/{{ name }}/archive/a41b3378a32554e961756662970d68612f4f097e.tar.gz
-  sha256: f09bd2adf6b4a1b35ba13294222ab4b042c22e70eb887d0fe826f04bede26e1f
+  url: https://github.com/grimme-lab/{{ name }}/archive/5b13467bd63a2a4dbd5b339ed44d0fa026b6f0af.tar.gz
+  sha256: 2191f2c1807175bdf89ff1cae14eecfef6c202c2ae20653ef03fbd970390e828
 
 build:
   number: 0

@@ -11,15 +11,14 @@ source:
 
 build:
   number: 0
+  skip: True  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}
 
 requirements:
   build:
-    - {{ compiler('c') }}  # [unix]
-    - {{ compiler('fortran') }}  # [unix]
-    - {{ compiler('m2w64_c') }}  # [win]
-    - {{ compiler('m2w64_fortran') }}  # [win]
+    - {{ compiler('c') }}
+    - {{ compiler('fortran') }}
     - meson >=0.51
     - ninja
   host:
@@ -27,7 +26,6 @@ requirements:
     - liblapack
     - llvm-openmp  # [osx]
     - libgomp  # [linux and not aarch64]
-    - m2w64-toolchain  # [win]
   run:
     - libblas
     - liblapack

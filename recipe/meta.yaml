@@ -1,5 +1,5 @@
 {% set name = "xtb" %}
-{% set version = "6.3.3" %}
+{% set version = "6.4.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://github.com/grimme-lab/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: d7f154bf53a635b94946ba9e7986b6bfbd704e040d38cc504ea5422fb4be21f8
+  sha256: 8861a0d88c35ebf94f248dec527da23c9d473959f0ccaf9cc24a3c92cf648ff8
 
 build:
-  number: 2
+  number: 0
   skip: True  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}

@@ -1,5 +1,5 @@
 {% set name = "xtb" %}
-{% set version = "6.4.0" %}
+{% set version = "6.4.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,11 +7,11 @@ package:
 
 source:
   url: https://github.com/grimme-lab/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 8861a0d88c35ebf94f248dec527da23c9d473959f0ccaf9cc24a3c92cf648ff8
+  sha256: cd7b6ec9b7963012ce71220a70773641f0d9e06e0691750a25b83e823510d1d7
 
 build:
   number: 0
-  skip: True  # [win]
+  skip: true  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}
 
@@ -40,9 +40,9 @@ about:
   license: LGPL-3.0-or-later
   license_family: LGPL
   license_file:
-    - "COPYING"
-    - "COPYING.LESSER"
-  summary: 'Semiempirical Extended Tight-Binding Program Package'
+    - COPYING
+    - COPYING.LESSER
+  summary: Semiempirical Extended Tight-Binding Program Package
   doc_url: https://{{ name }}-docs.readthedocs.io/
   dev_url: https://github.com/grimme-lab/{{ name }}
 

@@ -2,24 +2,18 @@
 set -ex
 
 meson_options=(
-   "--prefix=${PREFIX}"
-   "--libdir=lib"
-   "--buildtype=release"
-   "--warnlevel=0"
-   "-Dbuild_name=conda-forge"
-   "-Dla_backend=netlib"
-   "-Ddefault_library=shared"
-   ".."
+  ${MESON_ARGS:---prefix=${PREFIX} --libdir=lib}
+  "--buildtype=release"
+  "--warnlevel=0"
+  "-Dbuild_name=conda-forge"
+  "-Dla_backend=netlib"
+  "-Ddefault_library=shared"
 )
 
-mkdir -p _build
-pushd _build
+meson setup _build "${meson_options[@]}"
 
-if [[ "$(uname)" = Darwin ]]; then
-    # Hack around issue, see contents of fake-bin/cc1 for an explanation
-    PATH=${PATH}:${RECIPE_DIR}/fake-bin meson "${meson_options[@]}"
-else
-    meson "${meson_options[@]}"
+meson compile -C _build
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" ]]; then
+  meson test -C _build --print-errorlogs
 fi
-
-ninja test install
+meson install -C _build

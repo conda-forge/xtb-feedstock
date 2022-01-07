@@ -10,7 +10,7 @@ source:
   sha256: cd7b6ec9b7963012ce71220a70773641f0d9e06e0691750a25b83e823510d1d7
 
 build:
-  number: 1
+  number: 2
   skip: true  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}
@@ -21,12 +21,9 @@ requirements:
     - {{ compiler('fortran') }}
     - meson >=0.51
     - ninja
-  host:
-    - libblas
-    - liblapack
     - llvm-openmp  # [osx]
     - libgomp  # [linux]
-  run:
+  host:
     - libblas
     - liblapack
 

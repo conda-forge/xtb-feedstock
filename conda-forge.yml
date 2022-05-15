@@ -2,8 +2,11 @@ conda_forge_output_validation: true
 provider:
   linux_ppc64le: default
   linux_aarch64: default
-build_platform: {osx_arm64: osx_64}
-test_on_native_only: true
+build_platform:
+  osx_arm64: osx_64
+  linux_aarch64: linux_64
+  linux_ppc64le: linux_64
+test: native_and_emulated
 github:
   branch_name: main
   tooling_branch_name: main

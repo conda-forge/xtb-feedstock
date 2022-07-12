@@ -13,9 +13,9 @@ fortran_compiler:
 fortran_compiler_version:
 - '9'
 libblas:
-- 3.8 *netlib
+- 3.9 *netlib
 liblapack:
-- 3.8 *netlib
+- 3.9 *netlib
 llvm_openmp:
 - '13'
 macos_machine:

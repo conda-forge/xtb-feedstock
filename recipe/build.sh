@@ -1,19 +1,31 @@
 #!/usr/bin/env bash
+
 set -ex
 
-meson_options=(
-  ${MESON_ARGS:---prefix=${PREFIX} --libdir=lib}
-  "--buildtype=release"
-  "--warnlevel=0"
-  "-Dbuild_name=conda-forge"
-  "-Dla_backend=netlib"
-  "-Ddefault_library=shared"
-)
+mv $PREFIX/lib/pkgconfig/{lapack,blas}.pc $SRC_DIR
 
-meson setup _build "${meson_options[@]}"
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" ]]; then
+  MESON_ARGS=${MESON_ARGS:---prefix=${PREFIX} --libdir=lib}
+else
+  cat > pkgconfig.ini <<EOF
+[binaries]
+pkgconfig = '$BUILD_PREFIX/bin/pkg-config'
+EOF
+  MESON_ARGS="${MESON_ARGS:---prefix=${PREFIX} --libdir=lib} --cross-file pkgconfig.ini"
+fi
+
+meson setup _build \
+  ${MESON_ARGS} \
+  --buildtype=release \
+  --warnlevel=0 \
+  --default-library=shared \
+  -Dbuild_name=conda-forge \
+  -Dla_backend=netlib
 
 meson compile -C _build
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" ]]; then
-  meson test -C _build --print-errorlogs
+  meson test -C _build --no-rebuild --print-errorlogs --suite unit -t 20
 fi
-meson install -C _build
+meson install -C _build --no-rebuild
+
+mv $SRC_DIR/{lapack,blas}.pc $PREFIX/lib/pkgconfig

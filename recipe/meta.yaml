@@ -10,7 +10,7 @@ source:
   sha256: 0922205cc224fe79e28f3d75be4e10c03efa8f3f666aedec8346fed82b272cad
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}
@@ -22,6 +22,7 @@ requirements:
     - meson
     - ninja
     - asciidoctor
+    - pkg-config
     - llvm-openmp  # [osx]
     - libgomp  # [linux]
   host:

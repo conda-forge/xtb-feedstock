@@ -1,5 +1,5 @@
 {% set name = "xtb" %}
-{% set version = "6.5.1" %}
+{% set version = "6.6.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://github.com/grimme-lab/xtb/releases/download/v{{ version }}/xtb-{{ version }}-source.tar.xz
-  sha256: 0922205cc224fe79e28f3d75be4e10c03efa8f3f666aedec8346fed82b272cad
+  sha256: 8460113f2678dcb23220af17b734f1221af302f42126bb54e3ae356530933b85
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}
@@ -29,6 +29,7 @@ requirements:
     - libblas
     - liblapack
     - mctc-lib
+    - tblite
 
 
 test:

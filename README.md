@@ -1,11 +1,11 @@
-About xtb
-=========
+About xtb-feedstock
+===================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/xtb-feedstock/blob/main/LICENSE.txt)
 
 Home: https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/xtb
 
 Package license: LGPL-3.0-or-later
-
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/xtb-feedstock/blob/main/LICENSE.txt)
 
 Summary: Semiempirical Extended Tight-Binding Program Package
 

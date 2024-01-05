@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/grimme-lab/xtb/releases/download/v{{ version }}/xtb-{{ version }}-source.tar.xz
-  sha256: 1c85e3ed66319865e58863fa465999f3048457a078abf3459c78a7f80447cffd
+  sha256: de0b8d4515f3c878456d9f0f83d4922a55f2b4cbb9c56fe68df559ecd284ff86
 
 build:
   number: 1

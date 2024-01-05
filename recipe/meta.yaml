@@ -10,7 +10,7 @@ source:
   sha256: 1c85e3ed66319865e58863fa465999f3048457a078abf3459c78a7f80447cffd
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}

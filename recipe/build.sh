@@ -20,6 +20,7 @@ meson setup _build \
   --warnlevel=0 \
   --default-library=shared \
   -Dbuild_name=conda-forge \
+  -Dinstall_modules=true \
   -Dlapack=netlib
 
 meson compile -C _build

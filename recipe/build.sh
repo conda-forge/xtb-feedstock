@@ -16,7 +16,6 @@ fi
 
 meson setup _build \
   ${MESON_ARGS} \
-  --buildtype=release \
   --warnlevel=0 \
   --default-library=shared \
   -Dbuild_name=conda-forge \

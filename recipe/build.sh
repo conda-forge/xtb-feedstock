@@ -19,6 +19,7 @@ meson setup _build \
   --warnlevel=0 \
   --default-library=shared \
   -Dbuild_name=conda-forge \
+  -Dcpcmx=disabled \
   -Dlapack=netlib
 
 meson compile -C _build

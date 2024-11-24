@@ -17,10 +17,9 @@ fi
 meson setup _build \
   ${MESON_ARGS} \
   --warnlevel=0 \
+  --wrap-mode=nodownload \
   -Dbuild_name=conda-forge \
   -Dcpcmx=disabled \
-  -Dtest-drive:xdp=disabled \
-  -Dtest-drive:qp=disabled \
   -Dlapack=netlib
 
 meson compile -C _build

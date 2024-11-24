@@ -6,10 +6,14 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/grimme-lab/xtb/releases/download/v{{ version }}/xtb-{{ version }}-source.tar.xz
-  sha256: 79a2a2f50091b3b941e5139c1b38a53203d5d2e9ba496a7ad505d8c31ccd6013
-  patches:
-    - patches/1072.patch
+  - url: https://github.com/grimme-lab/xtb/releases/download/v{{ version }}/xtb-{{ version }}-source.tar.xz
+    sha256: 79a2a2f50091b3b941e5139c1b38a53203d5d2e9ba496a7ad505d8c31ccd6013
+    patches:
+      - patches/1072.patch
+  - url: https://github.com/fortran-lang/test-drive/releases/download/v0.5.0/test-drive-0.5.0.tar.xz
+    sha256: 38c29f9366ed6fb90ff10fcb7efe2cebf2f3ba003edb08e6f56d2d758a070cee
+    folder: subprojects/test-drive
+    
 
 build:
   number: 0

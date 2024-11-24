@@ -1,18 +1,5 @@
-From 6f68d1a214a925ce21c61ac8cf533df13713ddff Mon Sep 17 00:00:00 2001
-From: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
-Date: Wed, 31 Jul 2024 12:57:14 +0200
-Subject: [PATCH 1/6] make xtb compilable with latest tblite commit (6b7ee4e)
-
-Signed-off-by: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
----
- src/dipro.F90             |  8 ++++++++
- src/dipro/xtb.F90         |  6 +++---
- src/tblite/calculator.F90 | 14 +++++++-------
- subprojects/mstore.wrap   |  2 +-
- 4 files changed, 19 insertions(+), 11 deletions(-)
-
 diff --git a/src/dipro.F90 b/src/dipro.F90
-index 42a136364..ab64e0710 100644
+index 42a1363..ab64e07 100644
 --- a/src/dipro.F90
 +++ b/src/dipro.F90
 @@ -130,6 +130,10 @@ subroutine get_jab(env, tblite, mol, fragment, dipro)
@@ -38,7 +25,7 @@ index 42a136364..ab64e0710 100644
        call new_wavefunction(wfx(ifr), mfrag(ifr)%nat, fcalc(ifr)%bas%nsh, fcalc(ifr)%bas%nao, &
           & 1, set%etemp * ktoau)
 diff --git a/src/dipro/xtb.F90 b/src/dipro/xtb.F90
-index 95aff7848..4db948a3e 100644
+index 95aff78..4db948a 100644
 --- a/src/dipro/xtb.F90
 +++ b/src/dipro/xtb.F90
 @@ -50,11 +50,11 @@ subroutine get_calculator(xcalc, mol, method, error)
@@ -57,7 +44,7 @@ index 95aff7848..4db948a3e 100644
  end subroutine get_calculator
  #endif
 diff --git a/src/tblite/calculator.F90 b/src/tblite/calculator.F90
-index 653e6b285..4a43805fb 100644
+index 653e6b2..f050874 100644
 --- a/src/tblite/calculator.F90
 +++ b/src/tblite/calculator.F90
 @@ -150,16 +150,16 @@ subroutine newTBLiteCalculator(env, mol, calc, input)
@@ -77,170 +64,17 @@ index 653e6b285..4a43805fb 100644
           calc%nspin = 1
 -         calc%etemp = 5000.0_wp * kt
 -         call new_ceh_calculator(calc%tblite, struc)
-+         calc%etemp = 5000.0_wp * kt ! MM (20240731): TODO: Update this value when CEH-2.0.0 is released
++         calc%etemp = 4000.0_wp * kt
 +         call new_ceh_calculator(calc%tblite, struc, error)
        end select
     end if
     if (allocated(error)) then
-@@ -244,7 +244,7 @@ subroutine newTBLiteWavefunction(env, mol, calc, chk)
+@@ -244,18 +244,18 @@ subroutine newTBLiteWavefunction(env, mol, calc, chk)
           block 
              use tblite_context, only : context_type, context_terminal
              use tblite_context_terminal, only : escape
 -            use tblite_ceh_singlepoint, only : ceh_guess
 +            use tblite_ceh_singlepoint, only : ceh_singlepoint
-             use tblite_lapack_solver, only : lapack_solver 
-             use tblite_lapack_solver, only : lapack_algorithm
-             type(context_type) :: ctx
-@@ -255,7 +255,7 @@ subroutine newTBLiteWavefunction(env, mol, calc, chk)
-             write (env%unit, '(1x,a)') escape(ctx%terminal%cyan) // "Calculation of CEH charges" // &
-                & escape(ctx%terminal%reset)
-             
--            call ceh_guess(ctx, calc%tblite, struc, error, wfn, calc%accuracy, 1)
-+            call ceh_singlepoint(ctx, calc%tblite, struc, error, wfn, calc%accuracy, 1)
-          end block
-       end select
-    end associate
-diff --git a/subprojects/mstore.wrap b/subprojects/mstore.wrap
-index acf5df9de..0dfe716c0 100644
---- a/subprojects/mstore.wrap
-+++ b/subprojects/mstore.wrap
-@@ -1,4 +1,4 @@
- [wrap-git]
- directory = mstore
- url = https://github.com/grimme-lab/mstore
--revision = v0.2.0
-+revision = v0.3.0
-
-From 79f89f1fabe5ff557c6518b393375e090cc5c8ae Mon Sep 17 00:00:00 2001
-From: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
-Date: Wed, 31 Jul 2024 13:10:14 +0200
-Subject: [PATCH 2/6] update electronic temperature for CEH guess
-
-Signed-off-by: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
----
- src/tblite/calculator.F90 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/src/tblite/calculator.F90 b/src/tblite/calculator.F90
-index 4a43805fb..f83929d8f 100644
---- a/src/tblite/calculator.F90
-+++ b/src/tblite/calculator.F90
-@@ -158,7 +158,7 @@ subroutine newTBLiteCalculator(env, mol, calc, input)
-       case("ceh")
-          calc%guess = method
-          calc%nspin = 1
--         calc%etemp = 5000.0_wp * kt ! MM (20240731): TODO: Update this value when CEH-2.0.0 is released
-+         calc%etemp = 4000.0_wp * kt
-          call new_ceh_calculator(calc%tblite, struc, error)
-       end select
-    end if
-
-From 77db0f69c3ab2ef90e237eaa18259b88b20dac2b Mon Sep 17 00:00:00 2001
-From: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
-Date: Wed, 31 Jul 2024 16:24:14 +0200
-Subject: [PATCH 3/6] adapt PTB tests to changed tblite d orbital ordering
-
-Signed-off-by: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
----
- test/unit/test_ptb.F90 | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/test/unit/test_ptb.F90 b/test/unit/test_ptb.F90
-index 16c14cbe4..b6b597ce9 100644
---- a/test/unit/test_ptb.F90
-+++ b/test/unit/test_ptb.F90
-@@ -215,7 +215,7 @@ subroutine test_ptb_overlap(error)
-       call check_(error, ints%overlap(2, 3), overlap_exp(3), thr=thr)
-       call check_(error, ints%overlap(1, 15), overlap_exp(4), thr=thr)
-       call check_(error, ints%overlap(1, 23), overlap_exp(5), thr=thr)
--      call check_(error, ints%overlap(12, 22), overlap_exp(6), thr=thr)
-+      call check_(error, ints%overlap(11, 22), overlap_exp(6), thr=thr)
- 
-    end subroutine test_ptb_overlap
- 
-@@ -286,7 +286,7 @@ subroutine test_ptb_overlap_h0(error)
-       & message=message)
-       call check_(error, auxints%overlap_h0_1(1, 23), overlap_exp(5), thr=thr, &
-       & message=message)
--      call check_(error, auxints%overlap_h0_1(12, 22), overlap_exp(6), thr=thr, &
-+      call check_(error, auxints%overlap_h0_1(11, 22), overlap_exp(6), thr=thr, &
-       & message=message)
- 
-    end subroutine test_ptb_overlap_h0
-@@ -356,7 +356,7 @@ subroutine test_ptb_overlap_SX(error)
-       & message=message)
-       call check_(error, overlap_oneminusx(1, 23), overlap_oneminusx_exp(5), thr=thr2, &
-       & message=message)
--      call check_(error, overlap_oneminusx(12, 22), overlap_oneminusx_exp(6), thr=thr2, &
-+      call check_(error, overlap_oneminusx(11, 22), overlap_oneminusx_exp(6), thr=thr2, &
-       & message=message)
- 
-    end subroutine test_ptb_overlap_SX
-@@ -434,7 +434,7 @@ subroutine test_ptb_V_ECP(error)
-       & message=message)
-       call check_(error, vecp(5, 8), vecp_ref(3), thr=thr2, &
-       & message=message)
--      call check_(error, vecp(12, 12), vecp_ref(4), thr=thr2, &
-+      call check_(error, vecp(13, 13), vecp_ref(4), thr=thr2, &
-       & message=message)
-    end subroutine test_ptb_V_ECP
- 
-@@ -665,15 +665,16 @@ subroutine test_ptb_hamiltonian_h0(error)
-          & alpha_scal=id_to_atom(mol, ptbData%hamiltonian%kalphah0l))
-       allocate (vecp(bas%nao, bas%nao), source=0.0_wp)
- 
-+      ints%hamiltonian = 0.0_wp
-       call get_hamiltonian(mol, list, bas, ptbData%hamiltonian, ptbData%hamiltonian%kla, auxints%overlap_h0_1, &
-       & levels, ints%hamiltonian, ptbGlobals%kpol, ptbGlobals%kitr, ptbGlobals%kitocod)
-       message = "H0 matrix element not matching to expected value."
-       call check_(error, ints%hamiltonian(1, 1), h0_ref(1), thr=thr)
-       call check_(error, ints%hamiltonian(1, 2), h0_ref(2), thr=thr)
--      call check_(error, ints%hamiltonian(1, 22), h0_ref(3), thr=thr)
-+      call check_(error, ints%hamiltonian(1, 24), h0_ref(3), thr=thr)
-       call check_(error, ints%hamiltonian(13, 6), h0_ref(4), thr=thr)
-       call check_(error, ints%hamiltonian(8, 5), h0_ref(5), thr=thr)
--      call check_(error, ints%hamiltonian(13, 26), h0_ref(6), thr=thr)
-+      call check_(error, ints%hamiltonian(9, 22), h0_ref(6), thr=thr)
-    end subroutine test_ptb_hamiltonian_h0
- 
-    subroutine test_ptb_V_XC(error)
-@@ -769,9 +770,9 @@ subroutine test_ptb_V_XC(error)
-       & message=message)
-       call check_(error, Vxc(1, 2), Vxc_ref(2), thr=thr, &
-       & message=message)
--      call check_(error, Vxc(1, 22), Vxc_ref(3), thr=thr, &
-+      call check_(error, Vxc(1, 24), Vxc_ref(3), thr=thr, &
-       & message=message)
--      call check_(error, Vxc(13, 26), Vxc_ref(4), thr=thr, &
-+      call check_(error, Vxc(9, 22), Vxc_ref(4), thr=thr, &
-       & message=message)
- 
-    end subroutine test_ptb_V_XC
-@@ -1067,7 +1068,7 @@ subroutine test_ptb_plus_U_potential(error)
-       call check_(error, wfn%coeff(1, 1, 1), plusU_pot_ref(1), thr=thr)
-       call check_(error, wfn%coeff(1, 2, 1), plusU_pot_ref(2), thr=thr)
-       call check_(error, wfn%coeff(1, 20, 1), plusU_pot_ref(3), thr=thr)
--      call check_(error, wfn%coeff(8, 26, 1), plusU_pot_ref(4), thr=thr)
-+      call check_(error, wfn%coeff(8, 22, 1), plusU_pot_ref(4), thr=thr)
- 
-    end subroutine test_ptb_plus_U_potential
- 
-
-From b4d153b109ec2625eff9a98df702e62b8f519d53 Mon Sep 17 00:00:00 2001
-From: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
-Date: Wed, 31 Jul 2024 16:40:33 +0200
-Subject: [PATCH 4/6] remove whitespace
-
-Signed-off-by: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
----
- src/tblite/calculator.F90 | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/src/tblite/calculator.F90 b/src/tblite/calculator.F90
-index f83929d8f..788c80f0f 100644
---- a/src/tblite/calculator.F90
-+++ b/src/tblite/calculator.F90
-@@ -248,13 +248,13 @@ subroutine newTBLiteWavefunction(env, mol, calc, chk)
              use tblite_lapack_solver, only : lapack_solver 
              use tblite_lapack_solver, only : lapack_algorithm
              type(context_type) :: ctx
@@ -252,51 +86,27 @@ index f83929d8f..788c80f0f 100644
              write (env%unit, '(1x,a)') escape(ctx%terminal%cyan) // "Calculation of CEH charges" // &
                 & escape(ctx%terminal%reset)
 -            
+-            call ceh_guess(ctx, calc%tblite, struc, error, wfn, calc%accuracy, 1)
 +
-             call ceh_singlepoint(ctx, calc%tblite, struc, error, wfn, calc%accuracy, 1)
-          end block
-       end select
-
-From 0d50c183edcbabac955e1416334285afc980fcd2 Mon Sep 17 00:00:00 2001
-From: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
-Date: Wed, 31 Jul 2024 16:48:48 +0200
-Subject: [PATCH 5/6] adapt to new ceh_singlepoint interface
-
-Signed-off-by: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
----
- src/tblite/calculator.F90 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/src/tblite/calculator.F90 b/src/tblite/calculator.F90
-index 788c80f0f..f05087414 100644
---- a/src/tblite/calculator.F90
-+++ b/src/tblite/calculator.F90
-@@ -255,7 +255,7 @@ subroutine newTBLiteWavefunction(env, mol, calc, chk)
-             write (env%unit, '(1x,a)') escape(ctx%terminal%cyan) // "Calculation of CEH charges" // &
-                & escape(ctx%terminal%reset)
- 
--            call ceh_singlepoint(ctx, calc%tblite, struc, error, wfn, calc%accuracy, 1)
 +            call ceh_singlepoint(ctx, calc%tblite, struc, wfn, calc%accuracy, 1)
           end block
        end select
     end associate
-
-From 40c55997c106453b407c3e71737979003d3b8279 Mon Sep 17 00:00:00 2001
-From: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
-Date: Thu, 1 Aug 2024 11:50:48 +0200
-Subject: [PATCH 6/6] give orbital annotations for each comparison for more
- transparency
-
-Signed-off-by: Marcel Mueller <marcel.mueller@thch.uni-bonn.de>
----
- test/unit/test_ptb.F90 | 287 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 247 insertions(+), 40 deletions(-)
-
+diff --git a/subprojects/mstore.wrap b/subprojects/mstore.wrap
+index acf5df9..0dfe716 100644
+--- a/subprojects/mstore.wrap
++++ b/subprojects/mstore.wrap
+@@ -1,4 +1,4 @@
+ [wrap-git]
+ directory = mstore
+ url = https://github.com/grimme-lab/mstore
+-revision = v0.2.0
++revision = v0.3.0
 diff --git a/test/unit/test_ptb.F90 b/test/unit/test_ptb.F90
-index b6b597ce9..5e585f90d 100644
+index 16c14cb..5e585f9 100644
 --- a/test/unit/test_ptb.F90
 +++ b/test/unit/test_ptb.F90
-@@ -186,12 +186,37 @@ subroutine test_ptb_overlap(error)
+@@ -186,12 +186,37 @@ contains
        !> (Scaled) overlap matrix
        character(len=:), allocatable :: message
        real(wp), parameter :: overlap_exp(6) = [ &
@@ -340,7 +150,16 @@ index b6b597ce9..5e585f90d 100644
        real(wp), allocatable :: lattr(:, :)
        real(wp) :: cutoff
  
-@@ -249,12 +274,37 @@ subroutine test_ptb_overlap_h0(error)
+@@ -215,7 +240,7 @@ contains
+       call check_(error, ints%overlap(2, 3), overlap_exp(3), thr=thr)
+       call check_(error, ints%overlap(1, 15), overlap_exp(4), thr=thr)
+       call check_(error, ints%overlap(1, 23), overlap_exp(5), thr=thr)
+-      call check_(error, ints%overlap(12, 22), overlap_exp(6), thr=thr)
++      call check_(error, ints%overlap(11, 22), overlap_exp(6), thr=thr)
+ 
+    end subroutine test_ptb_overlap
+ 
+@@ -249,12 +274,37 @@ contains
        type(error_type), allocatable, intent(out) :: error
        character(len=:), allocatable :: message
        real(wp), parameter :: overlap_exp(6) = [ &
@@ -384,7 +203,16 @@ index b6b597ce9..5e585f90d 100644
        real(wp), allocatable :: lattr(:, :)
        real(wp) :: cutoff
  
-@@ -319,12 +369,37 @@ subroutine test_ptb_overlap_SX(error)
+@@ -286,7 +336,7 @@ contains
+       & message=message)
+       call check_(error, auxints%overlap_h0_1(1, 23), overlap_exp(5), thr=thr, &
+       & message=message)
+-      call check_(error, auxints%overlap_h0_1(12, 22), overlap_exp(6), thr=thr, &
++      call check_(error, auxints%overlap_h0_1(11, 22), overlap_exp(6), thr=thr, &
+       & message=message)
+ 
+    end subroutine test_ptb_overlap_h0
+@@ -319,12 +369,37 @@ contains
        real(wp), allocatable :: overlap_sx(:, :), overlap_oneminusx(:, :)
        character(len=:), allocatable :: message
        real(wp), parameter :: overlap_oneminusx_exp(6) = [ &
@@ -428,7 +256,16 @@ index b6b597ce9..5e585f90d 100644
        real(wp), allocatable :: lattr(:, :)
        real(wp) :: cutoff
  
-@@ -392,10 +467,37 @@ subroutine test_ptb_V_ECP(error)
+@@ -356,7 +431,7 @@ contains
+       & message=message)
+       call check_(error, overlap_oneminusx(1, 23), overlap_oneminusx_exp(5), thr=thr2, &
+       & message=message)
+-      call check_(error, overlap_oneminusx(12, 22), overlap_oneminusx_exp(6), thr=thr2, &
++      call check_(error, overlap_oneminusx(11, 22), overlap_oneminusx_exp(6), thr=thr2, &
+       & message=message)
+ 
+    end subroutine test_ptb_overlap_SX
+@@ -392,10 +467,37 @@ contains
        type(error_type), allocatable, intent(out) :: error
        character(len=:), allocatable :: message
        real(wp), parameter :: vecp_ref(4) = [ &
@@ -470,7 +307,16 @@ index b6b597ce9..5e585f90d 100644
        real(wp), parameter :: xyz(3, 2) = reshape([ &
        & 2.0_wp, 0.0_wp, 0.0_wp, &
        & 0.0_wp, 0.0_wp, 0.0_wp], [3, 2])
-@@ -629,12 +731,39 @@ subroutine test_ptb_hamiltonian_h0(error)
+@@ -434,7 +536,7 @@ contains
+       & message=message)
+       call check_(error, vecp(5, 8), vecp_ref(3), thr=thr2, &
+       & message=message)
+-      call check_(error, vecp(12, 12), vecp_ref(4), thr=thr2, &
++      call check_(error, vecp(13, 13), vecp_ref(4), thr=thr2, &
+       & message=message)
+    end subroutine test_ptb_V_ECP
+ 
+@@ -629,12 +731,39 @@ contains
        real(wp), allocatable :: vecp(:, :)
  
        real(wp), parameter :: h0_ref(6) = [ &
@@ -516,7 +362,26 @@ index b6b597ce9..5e585f90d 100644
        real(wp), parameter :: levels(10) = [ &
        &    -0.796651404_wp, &
        &    -0.269771638_wp, &
-@@ -709,10 +838,37 @@ subroutine test_ptb_V_XC(error)
+@@ -665,15 +794,16 @@ contains
+          & alpha_scal=id_to_atom(mol, ptbData%hamiltonian%kalphah0l))
+       allocate (vecp(bas%nao, bas%nao), source=0.0_wp)
+ 
++      ints%hamiltonian = 0.0_wp
+       call get_hamiltonian(mol, list, bas, ptbData%hamiltonian, ptbData%hamiltonian%kla, auxints%overlap_h0_1, &
+       & levels, ints%hamiltonian, ptbGlobals%kpol, ptbGlobals%kitr, ptbGlobals%kitocod)
+       message = "H0 matrix element not matching to expected value."
+       call check_(error, ints%hamiltonian(1, 1), h0_ref(1), thr=thr)
+       call check_(error, ints%hamiltonian(1, 2), h0_ref(2), thr=thr)
+-      call check_(error, ints%hamiltonian(1, 22), h0_ref(3), thr=thr)
++      call check_(error, ints%hamiltonian(1, 24), h0_ref(3), thr=thr)
+       call check_(error, ints%hamiltonian(13, 6), h0_ref(4), thr=thr)
+       call check_(error, ints%hamiltonian(8, 5), h0_ref(5), thr=thr)
+-      call check_(error, ints%hamiltonian(13, 26), h0_ref(6), thr=thr)
++      call check_(error, ints%hamiltonian(9, 22), h0_ref(6), thr=thr)
+    end subroutine test_ptb_hamiltonian_h0
+ 
+    subroutine test_ptb_V_XC(error)
+@@ -708,10 +838,37 @@ contains
        type(error_type), allocatable, intent(out) :: error
        character(len=:), allocatable :: message
        real(wp), parameter :: Vxc_ref(4) = [ &
@@ -558,7 +423,19 @@ index b6b597ce9..5e585f90d 100644
        real(wp), parameter :: xyz(3, 2) = reshape([ &
        & 2.0_wp, 0.0_wp, 0.0_wp, &
        & 0.0_wp, 0.0_wp, 0.0_wp], [3, 2])
-@@ -958,10 +1114,35 @@ subroutine test_ptb_coulomb_potential(error)
+@@ -769,9 +926,9 @@ contains
+       & message=message)
+       call check_(error, Vxc(1, 2), Vxc_ref(2), thr=thr, &
+       & message=message)
+-      call check_(error, Vxc(1, 22), Vxc_ref(3), thr=thr, &
++      call check_(error, Vxc(1, 24), Vxc_ref(3), thr=thr, &
+       & message=message)
+-      call check_(error, Vxc(13, 26), Vxc_ref(4), thr=thr, &
++      call check_(error, Vxc(9, 22), Vxc_ref(4), thr=thr, &
+       & message=message)
+ 
+    end subroutine test_ptb_V_XC
+@@ -957,10 +1114,35 @@ contains
        !> Conversion factor from temperature to energy
        real(wp), parameter :: kt = 3.166808578545117e-06_wp
        real(wp), parameter :: coulomb_pot_ref(4) = [ &
@@ -598,7 +475,7 @@ index b6b597ce9..5e585f90d 100644
        real(wp), allocatable :: lattr(:, :)
        real(wp) :: cutoff
  
-@@ -1045,10 +1226,36 @@ subroutine test_ptb_plus_U_potential(error)
+@@ -1044,10 +1226,36 @@ contains
        integer, parameter :: nat = 2
        integer, parameter :: at(nat) = [5, 17]
        real(wp), parameter :: plusU_pot_ref(4) = [ &
@@ -639,3 +516,12 @@ index b6b597ce9..5e585f90d 100644
  
        call new(mol, at, xyz)
        allocate (ptbData)
+@@ -1067,7 +1275,7 @@ contains
+       call check_(error, wfn%coeff(1, 1, 1), plusU_pot_ref(1), thr=thr)
+       call check_(error, wfn%coeff(1, 2, 1), plusU_pot_ref(2), thr=thr)
+       call check_(error, wfn%coeff(1, 20, 1), plusU_pot_ref(3), thr=thr)
+-      call check_(error, wfn%coeff(8, 26, 1), plusU_pot_ref(4), thr=thr)
++      call check_(error, wfn%coeff(8, 22, 1), plusU_pot_ref(4), thr=thr)
+ 
+    end subroutine test_ptb_plus_U_potential
+ 

@@ -11,6 +11,7 @@ source:
     patches:
       - patches/1072.patch
       - patches/1133.patch
+      - patches/version.patch
   - url: https://github.com/fortran-lang/test-drive/releases/download/v0.5.0/test-drive-0.5.0.tar.xz
     sha256: 38c29f9366ed6fb90ff10fcb7efe2cebf2f3ba003edb08e6f56d2d758a070cee
     folder: subprojects/test-drive

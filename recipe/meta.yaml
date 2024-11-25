@@ -10,25 +10,29 @@ source:
     sha256: 79a2a2f50091b3b941e5139c1b38a53203d5d2e9ba496a7ad505d8c31ccd6013
     patches:
       - patches/1072.patch
+      - patches/1133.patch
+      - patches/version.patch
   - url: https://github.com/fortran-lang/test-drive/releases/download/v0.5.0/test-drive-0.5.0.tar.xz
     sha256: 38c29f9366ed6fb90ff10fcb7efe2cebf2f3ba003edb08e6f56d2d758a070cee
     folder: subprojects/test-drive
     
 
 build:
-  number: 0
-  skip: true  # [win]
+  number: 1
   run_exports:
     - {{ pin_subpackage('xtb', max_pin='x.x') }}
 
 requirements:
   build:
-    - {{ compiler('c') }}
-    - {{ compiler('fortran') }}
-    - {{ stdlib('c') }}
+    - {{ compiler('c') }}  # [unix]
+    - {{ compiler('fortran') }}  # [unix]
+    - {{ stdlib('c') }}  # [unix]
+    - {{ compiler('m2w64_c') }}  # [win]
+    - {{ compiler('m2w64_fortran') }}  # [win]
+    - {{ stdlib('m2w64_c') }}  # [win]
     - meson
     - ninja
-    - asciidoctor
+    - asciidoctor  # [unix]
     - pkg-config
     - llvm-openmp  # [osx]
     - libgomp  # [linux]

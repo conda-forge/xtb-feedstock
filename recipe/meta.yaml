@@ -33,9 +33,11 @@ requirements:
     - llvm-openmp  # [osx]
     - libgomp  # [linux]
   host:
+    - dftd4
     - libblas
     - liblapack
     - mctc-lib
+    - multicharge
     - tblite
 
 

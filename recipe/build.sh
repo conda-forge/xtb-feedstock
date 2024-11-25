@@ -16,10 +16,10 @@ fi
 
 meson setup _build \
   ${MESON_ARGS} \
-  --buildtype=release \
   --warnlevel=0 \
-  --default-library=shared \
+  --wrap-mode=nodownload \
   -Dbuild_name=conda-forge \
+  -Dcpcmx=disabled \
   -Dlapack=netlib
 
 meson compile -C _build

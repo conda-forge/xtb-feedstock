@@ -45,7 +45,6 @@ requirements:
     - mctc-lib
     - multicharge
     - tblite
-    - test-drive
 
 
 test:

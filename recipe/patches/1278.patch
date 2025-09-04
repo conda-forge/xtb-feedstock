@@ -5,18 +5,15 @@ Subject: [PATCH] Fix commas in optimizer
 
 Signed-off-by: Igor S. Gerasimov <foxtranigor@gmail.com>
 ---
- src/optimizer.f90 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/src/optimizer.f90 b/src/optimizer.f90
-index bdabc1a8a..1f1da4190 100644
+index e6fdc9a..7b49547 100644
 --- a/src/optimizer.f90
 +++ b/src/optimizer.f90
-@@ -850,7 +850,7 @@ subroutine relax(env,iter,mol,anc,restart,maxcycle,maxdispl,ethr,gthr, &
+@@ -849,7 +849,7 @@ subroutine relax(env,iter,mol,anc,restart,maxcycle,maxdispl,ethr,gthr, &
        write(env%unit,'(5x,"change   ",e18.7,1x,"Eh")')                      echng
        write(env%unit,'(3x,"gradient norm :",f14.7,1x,"Eh/α")',advance='no') gnorm
        write(env%unit,'(3x,"predicted",e18.7)',advance='no')                 depred
--      write(env%unit,'(1x,"("f7.2"%)")')         (depred-echng)/(echng+1e-34_wp)*100
+-      write(env%unit,'(1x,"("f7.2"%)")')         (depred-echng)/echng*100
 +      write(env%unit,'(1x,"(",f7.2,"%)")')       (depred-echng)/(echng+1e-34_wp)*100
     endif
     

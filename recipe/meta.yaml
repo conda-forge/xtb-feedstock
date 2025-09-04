@@ -32,6 +32,7 @@ requirements:
     - {{ compiler('m2w64_fortran') }}  # [win]
     - {{ stdlib('m2w64_c') }}  # [win]
     - meson
+    - meson 1.7.*  # [unix]
     - ninja
     - asciidoctor  # [unix]
     - pkg-config
@@ -44,6 +45,7 @@ requirements:
     - mctc-lib
     - multicharge
     - tblite
+    - test-drive
 
 
 test:

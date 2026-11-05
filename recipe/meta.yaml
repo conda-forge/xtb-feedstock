@@ -1,5 +1,5 @@
 {% set name = "xtb" %}
-{% set version = "6.7.1" %}
+{% set version = "6.8.0" %}
 
 package:
   name: {{ name|lower }}-pkg
@@ -7,7 +7,7 @@ package:
 
 source:
   - url: https://github.com/grimme-lab/xtb/releases/download/v{{ version }}/xtb-{{ version }}-source.tar.xz
-    sha256: 79a2a2f50091b3b941e5139c1b38a53203d5d2e9ba496a7ad505d8c31ccd6013
+    sha256: 12a91ba662eb88d966febd2bb9936e20fa19c8e0258ba0d8a75efb02a1c6bcc6
     patches:
       - patches/1072.patch
       - patches/1133.patch
@@ -17,14 +17,14 @@ source:
   - url: https://github.com/fortran-lang/test-drive/releases/download/v0.5.0/test-drive-0.5.0.tar.xz
     sha256: 38c29f9366ed6fb90ff10fcb7efe2cebf2f3ba003edb08e6f56d2d758a070cee
     folder: subprojects/test-drive
-    
+
 
 build:
-  number: 5
+  number: 0
 
 outputs:
   - name: {{ name }}
-    script: build_pkg.sh   # [unix]
+    script: build_pkg.sh  # [unix]
     script: build_pkg.bat  # [win]
     build:
       string: {{ module_abi }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}

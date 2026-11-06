@@ -34,23 +34,23 @@ outputs:
         - meson
         - ninja
         - asciidoctor  # [unix]
-        - pkg-config
+        - pkgconf
         - llvm-openmp  # [osx]
       host:
         # cpcm-x-devel * {{ module_abi }}_*
-        - dftd4-devel * {{ module_abi }}_*
+        - dftd4-devel >=4.3 {{ module_abi }}_*
         - llvm-openmp  # [osx]
         - libgomp  # [linux]
         - libblas
         - liblapack
-        - mctc-lib-devel * {{ module_abi }}_*
-        - multicharge-devel * {{ module_abi }}_*
-        - tblite-devel * {{ module_abi }}_*
-        - test-drive-devel * {{ module_abi }}_*
+        - mctc-lib-devel >=0.7 {{ module_abi }}_*
+        - multicharge-devel >=0.6 {{ module_abi }}_*
+        - tblite-devel >=0.8 {{ module_abi }}_*
+        - test-drive-devel >=0.6 {{ module_abi }}_*
 
     test:
       requires:
-        - pkg-config
+        - pkgconf
       commands:
         - {{ name }} --version  # [build_platform == target_platform]
         - test -f $PREFIX/lib/lib{{ name }}$SHLIB_EXT  # [unix]
@@ -74,7 +74,7 @@ outputs:
 
     test:
       requires:
-        - pkg-config
+        - pkgconf
       commands:
         - {{ name }} --version  # [build_platform == target_platform]
         - test -f $PREFIX/lib/lib{{ name }}$SHLIB_EXT  # [unix]

@@ -8,16 +8,6 @@ package:
 source:
   - url: https://github.com/grimme-lab/xtb/releases/download/v{{ version }}/xtb-{{ version }}-source.tar.xz
     sha256: 12a91ba662eb88d966febd2bb9936e20fa19c8e0258ba0d8a75efb02a1c6bcc6
-    patches:
-      - patches/1072.patch
-      - patches/1133.patch
-      - patches/1278.patch
-      - patches/1374.patch
-      - patches/version.patch
-  - url: https://github.com/fortran-lang/test-drive/releases/download/v0.5.0/test-drive-0.5.0.tar.xz
-    sha256: 38c29f9366ed6fb90ff10fcb7efe2cebf2f3ba003edb08e6f56d2d758a070cee
-    folder: subprojects/test-drive
-
 
 build:
   number: 0
@@ -41,13 +31,13 @@ outputs:
         - {{ compiler('m2w64_c') }}  # [win]
         - {{ compiler('m2w64_fortran') }}  # [win]
         - {{ stdlib('m2w64_c') }}  # [win]
-        - meson 1.7.*
+        - meson
         - ninja
         - asciidoctor  # [unix]
         - pkg-config
         - llvm-openmp  # [osx]
       host:
-        - cpcm-x-devel * {{ module_abi }}_*
+        # cpcm-x-devel * {{ module_abi }}_*
         - dftd4-devel * {{ module_abi }}_*
         - llvm-openmp  # [osx]
         - libgomp  # [linux]
@@ -74,11 +64,13 @@ outputs:
     build:
       string: {{ module_abi }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
       run_exports:
-        - {{ pin_subpackage(name, max_pin='x.x') }} {{ module_abi }}_*
+        - {{ pin_subpackage(name, max_pin='x.x') }}
+        - {{ name }} * {{ module_abi }}_*
 
     requirements:
       run:
-        - {{ pin_subpackage(name, max_pin='x.x') }} {{ module_abi }}_*
+        - {{ pin_subpackage(name, max_pin='x.x') }}
+        - {{ name }} * {{ module_abi }}_*
 
     test:
       requires:

@@ -20,7 +20,7 @@ meson setup _build \
   --wrap-mode=nodownload \
   -Ddefault_library=shared \
   -Dbuild_name=conda-forge \
-  -Dcpcmx=enabled \
+  -Dcpcmx=disabled \
   -Dlapack=netlib
 
 meson compile -C _build
